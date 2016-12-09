@@ -71,7 +71,7 @@ public class RestTest {
 		//String charSet =  method.getResponseCharSet();
 		//String response =new String(method.getResponseBody(),charSet );
 		InputStream resStream = method.getResponseBodyAsStream();  
-        BufferedReader br = new BufferedReader(new InputStreamReader(resStream));  
+        BufferedReader br = new BufferedReader(new InputStreamReader(resStream,"GB2312"));
         StringBuffer resBuffer = new StringBuffer();  
         String resTemp = "";  
         while((resTemp = br.readLine()) != null){  
