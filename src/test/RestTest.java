@@ -7,6 +7,11 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.junit.Test;
 
 public class RestTest {
@@ -56,6 +61,51 @@ public class RestTest {
 	}
 	@Test
 	public void getTotalNumTest() throws Exception {
+		
+		
+		//httpClient4.3
+		
+/*		CloseableHttpClient httpClient = HttpClients.createDefault();
+
+		HttpGet httpGet = new HttpGet(url);
+
+		httpGet.addHeader("Accept", "application/json");
+
+		CloseableHttpResponse rep = httpClient.execute(httpGet);
+
+		HttpEntity repEntity = rep.getEntity();
+
+		InputStream resStream = repEntity.getContent();
+		BufferedReader br = new BufferedReader(new InputStreamReader(resStream, "GB2312"));
+		StringBuffer resBuffer = new StringBuffer();
+		String resTemp = "";
+		while ((resTemp = br.readLine()) != null) {
+			resBuffer.append(resTemp);
+		}
+
+		rep.close();
+		httpClient.close();*/
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 
 		HttpClient client = new HttpClient();
 		
