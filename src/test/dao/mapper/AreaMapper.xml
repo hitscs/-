@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htsc.base.area.dao.mapper.AreaMapper">
+	<sql id="areaColumns">
+		a.ID , a.SYS_CODE AS "sysCode", a.ACTIVE_DATE AS "activeDate", a.SHOW_CODE AS "showCode", a.CREATE_TIME
+		AS "createTime", a.DATA_SOURCE AS "dataSource", a.IS_PROVINCILE_CAPTIAL AS "isProvincileCaptial",
+		a.IS_DIRECT_CONTROLLED AS "isDirectControlled", a.SHORT_NAME AS "shortName", a.DATA_CREATE_TYPE
+		AS "dataCreateType", a.PARENT_ID AS "parent.id", a.IS_ACTIVE AS "isActive", a.IS_CLASSIFY AS "isClassify",
+		a.INNER_ORDER AS "innerOrder", a.NAME AS "name", a.IS_PROVINCILE_CENTER AS "isProvincileCenter",
+		a.BELONG_DZX AS "belongDzx", a.BELONG_AREA AS "belongArea", a.IS_SINGLE_CITY AS "isSingleCity",
+		a.IS_35CITY AS "is35City"
+	</sql>
+	<sql id="parentColumns">
+		p.SYS_CODE AS "parent.sysCode", p.ACTIVE_DATE AS "parent.activeDate", p.SHOW_CODE AS "parent.showCode",
+		p.CREATE_TIME AS "parent.createTime", p.DATA_SOURCE AS "parent.dataSource", p.IS_PROVINCILE_CAPTIAL
+		AS "parent.isProvincileCaptial", p.IS_DIRECT_CONTROLLED AS "parent.isDirectControlled", p.SHORT_NAME
+		AS "parent.shortName", p.DATA_CREATE_TYPE AS "parent.dataCreateType", p.IS_ACTIVE AS "parent.isActive",
+		p.IS_CLASSIFY AS "parent.isClassify", p.INNER_ORDER AS "parent.innerOrder", P.NAME AS "parent.name",
+		P.IS_PROVINCILE_CENTER AS "parent.isProvincileCenter", P.BELONG_DZX AS "parent.belongDzx", P.BELONG_AREA
+		AS "parent.belongArea", P.IS_SINGLE_CITY AS "parent.isSingleCity", P.IS_35CITY AS "parent.is35City"
+	</sql>
+	<resultMap id="BaseResultMap" type="com.htsc.base.area.dao.pojo.Area">
+		<result column="ID" jdbcType="DECIMAL" property="id" />
+		<result column="SYS_CODE" jdbcType="VARCHAR" property="sysCode" />
+		<result column="ACTIVE_DATE" jdbcType="VARCHAR" property="activeDate" />
+		<result column="SHOW_CODE" jdbcType="VARCHAR" property="showCode" />
+		<result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
+		<result column="DATA_SOURCE" jdbcType="DECIMAL" property="dataSource" />
+		<result column="IS_PROVINCILE_CAPTIAL" jdbcType="CHAR" property="isProvincileCaptial" />
+		<result column="IS_DIRECT_CONTROLLED" jdbcType="CHAR" property="isDirectControlled" />
+		<result column="SHORT_NAME" jdbcType="VARCHAR" property="shortName" />
+		<result column="DATA_CREATE_TYPE" jdbcType="DECIMAL" property="dataCreateType" />
+		<result column="IS_ACTIVE" jdbcType="CHAR" property="isActive" />
+		<result column="IS_CLASSIFY" jdbcType="CHAR" property="isClassify" />
+		<result column="INNER_ORDER" jdbcType="DECIMAL" property="innerOrder" />
+		<result column="NAME" jdbcType="VARCHAR" property="name" />
+		<result column="IS_PROVINCILE_CENTER" jdbcType="CHAR" property="isProvincileCenter" />
+		<result column="BELONG_DZX" jdbcType="DECIMAL" property="belongDzx" />
+		<result column="BELONG_AREA" jdbcType="DECIMAL" property="belongArea" />
+		<result column="IS_SINGLE_CITY" jdbcType="CHAR" property="isSingleCity" />
+		<result column="IS_35CITY" jdbcType="CHAR" property="is35City" />
+		<association property="parent" column="PARENT_ID" select="get" fetchType="lazy">
+		</association>
+	</resultMap>
+	<insert id="insert" parameterType="com.htsc.base.area.dao.pojo.Area">
+		<!-- CREATE SEQUENCE SEQ_BASE_AREA -->
+		<selectKey keyProperty="id" resultType="Long" order="BEFORE">select SEQ_BASE_AREA.NEXTVAL from dual</selectKey>
+		insert into BASE_AREA (ID, SYS_CODE, ACTIVE_DATE, SHOW_CODE, CREATE_TIME, DATA_SOURCE, IS_PROVINCILE_CAPTIAL,
+		IS_DIRECT_CONTROLLED, SHORT_NAME, DATA_CREATE_TYPE, PARENT_ID, IS_ACTIVE, IS_CLASSIFY, INNER_ORDER
+		,NAME,IS_PROVINCILE_CENTER,BELONG_DZX,BELONG_AREA,IS_SINGLE_CITY,IS_35CITY) values (${id}, #{sysCode,jdbcType=VARCHAR},
+		#{activeDate,jdbcType=VARCHAR}, #{showCode,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR},
+		#{dataSource,jdbcType=DECIMAL}, #{isProvincileCaptial,jdbcType=CHAR}, #{isDirectControlled,jdbcType=CHAR},
+		#{shortName,jdbcType=VARCHAR}, #{dataCreateType,jdbcType=DECIMAL}, #{parent.id,jdbcType=DECIMAL},
+		#{isActive,jdbcType=CHAR}, #{isClassify,jdbcType=CHAR}, #{innerOrder,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR},
+		#{isProvincileCenter,jdbcType=CHAR}, #{belongDzx,jdbcType=CHAR},#{belongArea,jdbcType=CHAR},#{isSingleCity,jdbcType=CHAR},#{is35City,jdbcType=CHAR})
+	</insert>
+	<update id="delete">UPDATE BASE_AREA SET
+		IS_ACTIVE = '0'
+		WHERE id = #{id}
+	</update>
+	<update id="changeToActive">
+		UPDATE BASE_AREA SET
+		IS_ACTIVE = '1'
+		WHERE id IN
+		<foreach item="ids" index="index" collection="array" open="(" separator="," close=")">#{ids}</foreach>
+	</update>
+	<update id="changeToUnactive">
+		UPDATE BASE_AREA SET
+		IS_ACTIVE = '0'
+		WHERE id IN
+		<foreach item="ids" index="index" collection="array" open="(" separator="," close=")">#{ids}</foreach>
+	</update>
+	<update id="update">
+		UPDATE BASE_AREA
+		<set>
+			<if test="sysCode != null">SYS_CODE= #{sysCode},</if>
+			<if test="activeDate != null">ACTIVE_DATE= #{activeDate},</if>
+			<if test="showCode != null">SHOW_CODE= #{showCode},</if>
+			<if test="createTime != null">CREATE_TIME= #{createTime},</if>
+			<if test="dataSource != null">DATA_SOURCE= #{dataSource},</if>
+			<if test="isProvincileCaptial != null">IS_PROVINCILE_CAPTIAL= #{isProvincileCaptial},</if>
+			<if test="isDirectControlled != null">IS_DIRECT_CONTROLLED= #{isDirectControlled},</if>
+			<if test="shortName != null">SHORT_NAME= #{shortName},</if>
+			<if test="dataCreateType != null">DATA_CREATE_TYPE= #{dataCreateType},</if>
+			<if test="parent.id != null">PARENT_ID= #{parent.id},</if>
+			<if test="isActive != null">IS_ACTIVE= #{isActive},</if>
+			<if test="isClassify != null">IS_CLASSIFY= #{isClassify},</if>
+			<if test="innerOrder != null">INNER_ORDER= #{innerOrder},</if>
+			<if test="name != null">NAME= #{name},</if>
+			<if test="isProvincileCenter != null">IS_PROVINCILE_CENTER= #{isProvincileCenter},</if>
+			<if test="belongDzx != null">BELONG_DZX= #{belongDzx},</if>
+			<if test="belongArea != null">BELONG_AREA= #{belongArea},</if>
+			<if test="isSingleCity != null">IS_SINGLE_CITY= #{isSingleCity},</if>
+			<if test="is35City != null">IS_35CITY= #{is35City}</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	<select id="get" resultType="com.htsc.base.area.dao.pojo.Area">
+		SELECT
+		<include refid="areaColumns" />
+		FROM BASE_AREA a
+		WHERE a.id = #{id}
+	</select>
+	<select id="findActivedList" resultType="com.htsc.base.area.dao.pojo.Area">
+		SELECT
+		<include refid="areaColumns" />
+		FROM BASE_AREA a
+		WHERE a.IS_ACTIVE = '1'
+
+		ORDER BY a.INNER_ORDER
+	</select>
+	<select id="findAllList" resultType="com.htsc.base.area.dao.pojo.Area">
+		SELECT
+		<include refid="areaColumns" />
+		,
+		<include refid="parentColumns" />
+		FROM BASE_AREA a left join base_area p on a.parent_id=p.id
+		ORDER BY a.SHOW_CODE ASC
+	</select>
+	<select id="findUnactivedList" resultType="com.htsc.base.area.dao.pojo.Area">
+		SELECT
+		<include refid="areaColumns" />
+		FROM BASE_AREA a
+		WHERE a.IS_ACTIVE = '0'
+
+		ORDER BY a.INNER_ORDER
+	</select>
+	<select id="findListByParent" resultType="com.htsc.base.area.dao.pojo.Area">
+		SELECT
+		<include refid="areaColumns" />
+		FROM BASE_AREA a WHERE a.PARENT_ID = #{parent.id} ORDER BY a.SHOW_CODE ASC
+	</select>
+	<select id="findByConditions" resultType="com.htsc.base.area.dao.pojo.Area">
+		SELECT
+		<include refid="areaColumns" />
+		,
+		<include refid="parentColumns" />
+		FROM BASE_AREA a left join BASE_AREA p on a.parent_id=p.id
+		<where>
+			1=1
+			<if test="id != null and id != ''">AND a.id = #{id}</if>
+			<if test="sysCode != null and  sysCode != ''">AND a.SYS_CODE= #{sysCode}</if>
+			<if test="activeDate != null and activeDate != ''">AND a.ACTIVE_DATE= #{activeDate}</if>
+			<if test="showCode != null and  showCode != ''">AND a.SHOW_CODE= #{showCode}</if>
+			<if test="createTime != null and  createTime != ''">AND a.CREATE_TIME= #{createTime}</if>
+			<if test="dataSource != null and  dataSource != ''">AND a.DATA_SOURCE= #{dataSource}</if>
+			<if test="isProvincileCaptial != null and  isProvincileCaptial != ''">AND a.IS_PROVINCILE_CAPTIAL= #{isProvincileCaptial}</if>
+			<if test="isDirectControlled != null and  isDirectControlled != ''">AND a.IS_DIRECT_CONTROLLED= #{isDirectControlled}</if>
+			<if test="shortName != null and  shortName != ''">AND a.SHORT_NAME= #{shortName}</if>
+			<if test="dataCreateType != null and  dataCreateType != ''">AND a.DATA_CREATE_TYPE= #{dataCreateType}</if>
+			<choose>
+				<when test="parent == null or  parent.id ==null">
+				</when>
+				<otherwise>AND a.PARENT_ID= #{parent.id}</otherwise>
+			</choose>
+			<if test="isActive != null and  isActive != ''">AND a.IS_ACTIVE= #{isActive}</if>
+			<if test="isClassify != null and  isClassify != ''">AND a.IS_CLASSIFY= #{isClassify}</if>
+			<if test="innerOrder != null and  innerOrder != ''">AND a.INNER_ORDER= #{innerOrder}</if>
+
+		</where>
+		ORDER BY a.CREATE_TIME DESC
+	</select>
+	<select id="findPageSelfAndChildrensById" resultMap="BaseResultMap">
+		SELECT * FROM ( SELECT Z.*, ROWNUM RN FROM ( SELECT * FROM BASE_AREA where 1=1
+		<if test="id != null">and id=#{id} or PARENT_ID=#{id}</if>
+		ORDER BY
+		<choose>
+			<when test="orderColumn !=null">${orderColumn}</when>
+			<otherwise>CREATE_TIME DESC</otherwise>
+		</choose>
+		) Z
+		WHERE #{end}> ROWNUM
+		)
+		WHERE RN > #{start}
+	</select>
+	<select id="countSelfAndChildrensById" resultType="Integer">
+		SELECT count(1) FROM BASE_AREA a where 1=1
+		<if test="id != null">and a.id=#{id} or a.PARENT_ID=#{id}</if>
+
+	</select>
+	<select id="findPageByName" resultMap="BaseResultMap">
+		SELECT * FROM ( SELECT Z.*, ROWNUM RN FROM ( SELECT * FROM BASE_AREA where 1=1
+		<if test="name != null and name != ''">AND name LIKE '%'||#{name}||'%'</if>
+		ORDER BY
+		<choose>
+			<when test="orderColumn != null and orderColumn != ''">${orderColumn}</when>
+			<otherwise>CREATE_TIME DESC</otherwise>
+		</choose>
+		) Z
+		WHERE #{end}> ROWNUM
+		)
+		WHERE RN > #{start}
+	</select>
+	<select id="countByName" resultType="Integer">
+		SELECT count(1) FROM BASE_AREA a where 1=1
+		<if test="name != null and name != ''">AND a.name LIKE '%'||#{name}||'%'</if>
+
+	</select>
+	<select id="findPageByConditions" resultMap="BaseResultMap">
+		SELECT * FROM (
+		SELECT A.*, ROWNUM RN FROM (
+		SELECT * FROM BASE_AREA
+		<where>
+			<if test="area.id != null ">AND id = #{area.id}</if>
+			<if test="area.sysCode != null ">AND SYS_CODE= #{area.sysCode}</if>
+			<if test="area.activeDate != null ">AND ACTIVE_DATE= #{area.activeDate}</if>
+			<if test="area.showCode != null ">AND SHOW_CODE= #{area.showCode}</if>
+			<if test="area.createTime != null ">AND CREATE_TIME= #{area.createTime}</if>
+			<if test="area.dataSource != null ">AND DATA_SOURCE= #{area.dataSource}</if>
+			<if test="area.isProvincileCaptial != null ">AND IS_PROVINCILE_CAPTIAL= #{area.isProvincileCaptial}</if>
+			<if test="area.isDirectControlled != null ">AND IS_DIRECT_CONTROLLED= #{area.isDirectControlled}</if>
+			<if test="area.shortName != null ">AND SHORT_NAME= #{area.shortName}</if>
+			<if test="area.dataCreateType != null ">AND DATA_CREATE_TYPE= #{area.dataCreateType}</if>
+			<if test="area.parent != null ">AND PARENT_ID= #{area.parent.id}</if>
+			<if test="area.isActive != null ">AND IS_ACTIVE= #{area.isActive}</if>
+			<if test="area.isClassify != null ">AND IS_CLASSIFY= #{area.isClassify}</if>
+			<if test="area.innerOrder != null ">AND INNER_ORDER= #{area.innerOrder}</if>
+		</where>
+		ORDER BY ID
+		) A
+		WHERE #{end}>= ROWNUM
+		)
+		WHERE
+		RN > #{start}
+	</select>
+	<select id="countByConditions" resultType="Integer">
+		SELECT count(1) FROM BASE_AREA 
+		<where>
+			<if test="id != null ">AND id = #{id}</if>
+			<if test="sysCode != null ">AND SYS_CODE= #{sysCode}</if>
+			<if test="activeDate != null ">AND ACTIVE_DATE= #{activeDate}</if>
+			<if test="showCode != null ">AND SHOW_CODE= #{showCode}</if>
+			<if test="createTime != null ">AND CREATE_TIME= #{createTime}</if>
+			<if test="dataSource != null ">AND DATA_SOURCE= #{dataSource}</if>
+			<if test="isProvincileCaptial != null ">AND IS_PROVINCILE_CAPTIAL= #{isProvincileCaptial}</if>
+			<if test="isDirectControlled != null ">AND IS_DIRECT_CONTROLLED= #{isDirectControlled}</if>
+			<if test="shortName != null ">AND SHORT_NAME= #{shortName}</if>
+			<if test="dataCreateType != null ">AND DATA_CREATE_TYPE= #{dataCreateType}</if>
+			<if test="parent != null ">AND PARENT_ID= #{parent.id}</if>
+			<if test="isActive != null ">AND IS_ACTIVE= #{isActive}</if>
+			<if test="isClassify != null ">AND IS_CLASSIFY= #{isClassify}</if>
+			<if test="innerOrder != null ">AND INNER_ORDER= #{innerOrder}</if>
+		</where>
+	</select>
+</mapper>
