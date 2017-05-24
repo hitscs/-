@@ -4,12 +4,17 @@ import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.junit.Test;
@@ -131,6 +136,31 @@ public class RestTest {
 		System.out.println(response);
 		method.releaseConnection();
 	}	
-	
+	@Test
+	public void testPost() throws IOException {
+		
+		FileInputStream in = new FileInputStream("d:\\1111.txt");
+		byte[] readBytes = new byte[in.available()];
+		in.read(readBytes);
+		String string4file = new String(readBytes);
+		System.out.println(string4file);
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+
+		HttpPost httpPost = new HttpPost("http://localhost:8001/fileSystem/upload");
+
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.addBinaryBody("file1", readBytes, ContentType.MULTIPART_FORM_DATA, "1111.txt");// 文件流
+        builder.addBinaryBody("file2", readBytes, ContentType.MULTIPART_FORM_DATA, "2222.txt");// 文件流
+        builder.addBinaryBody("file3", readBytes, ContentType.MULTIPART_FORM_DATA, "3333.txt");// 文件流
+        builder.addBinaryBody("file4", readBytes, ContentType.MULTIPART_FORM_DATA, "4444.txt");// 文件流
+        builder.addBinaryBody("file5", readBytes, ContentType.MULTIPART_FORM_DATA, "5555.txt");// 文件流
+        builder.addTextBody("filename", "1111.txt");// 类似浏览器表单提交，对应input的name和value
+        HttpEntity entity = builder.build();
+        httpPost.setEntity(entity);
+        HttpResponse response = httpClient.execute(httpPost);// 执行提交
+        HttpEntity responseEntity = response.getEntity();
+        responseEntity.getContent();
+        
+	}
 
 }
