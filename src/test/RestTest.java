@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URLEncoder;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -14,9 +15,12 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.HTTP;
 import org.junit.Test;
 
 public class RestTest {
@@ -162,5 +166,28 @@ public class RestTest {
         responseEntity.getContent();
         
 	}
+	
+/*	@Test
+	public void testPost() throws IOException {
+
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+
+		HttpPost httpPost = new HttpPost("http://localhost:8001/fileSystem/upload");
+
+		String json = "";
+
+		// 将JSON进行UTF-8编码,以便传输中文
+		String encoderJson = URLEncoder.encode(json, "UTF-8");
+
+		httpPost.addHeader(HTTP.CONTENT_TYPE, "application/json");
+		StringEntity se = new StringEntity(encoderJson);
+		se.setContentType("text/json");
+		se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+		httpPost.setEntity(se);
+		HttpResponse response = httpClient.execute(httpPost);// 执行提交
+		HttpEntity responseEntity = response.getEntity();
+		responseEntity.getContent();
+
+	}*/
 
 }
